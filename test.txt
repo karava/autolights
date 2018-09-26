@@ -77,3 +77,51 @@ Traceback (most recent call last):
   File "/home/pi/.local/lib/python3.5/site-packages/lifxlan/device.py", line 501, in req_with_resp
     sock.sendto(msg.packed_message, (self.ip_addr, self.port))
 OSError: [Errno 101] Network is unreachable
+turning on lights Wed 16:48:07
+no motion for a while turning lights off Wed 17:03:07
+turning on lights Wed 17:03:12
+no motion for a while turning lights off Wed 17:18:12
+turning on lights Wed 17:18:43
+no motion for a while turning lights off Wed 17:33:43
+turning on lights Wed 17:33:44
+no motion for a while turning lights off Wed 17:48:45
+turning on lights Wed 17:49:33
+no motion for a while turning lights off Wed 18:04:34
+turning on lights Wed 18:04:36
+no motion for a while turning lights off Wed 18:19:37
+turning on lights Wed 18:19:39
+no motion for a while turning lights off Wed 18:34:39
+turning on lights Wed 18:34:41
+no motion for a while turning lights off Wed 18:49:41
+turning on lights Wed 18:49:43
+no motion for a while turning lights off Wed 19:04:43
+turning on lights Wed 19:04:46
+no motion for a while turning lights off Wed 19:19:46
+turning on lights Wed 21:48:45
+no motion for a while turning lights off Wed 22:03:46
+turning on lights Wed 22:03:49
+no motion for a while turning lights off Wed 22:18:49
+turning on lights Wed 22:22:00
+no motion for a while turning lights off Wed 22:37:01
+turning on lights Thu 06:13:31
+no motion for a while turning lights off Thu 06:28:31
+turning on lights Thu 06:38:40
+no motion for a while turning lights off Thu 06:53:41
+turning on lights Thu 06:53:42
+no motion for a while turning lights off Thu 07:08:42
+turning on lights Thu 07:08:44
+no motion for a while turning lights off Thu 07:23:45
+turning on lights Thu 07:23:47
+no motion for a while turning lights off Thu 07:38:48
+Traceback (most recent call last):
+  File "/home/pi/tmp/pycharm_project_634/autolights.py", line 55, in <module>
+    if __name__== "__main__":
+  File "/home/pi/tmp/pycharm_project_634/autolights.py", line 47, in main
+    print("no motion for a while turning lights off", time.strftime('%a %H:%M:%S'))
+  File "/home/pi/.local/lib/python3.5/site-packages/lifxlan/light.py", line 56, in set_power
+    self.req_with_ack(LightSetPower, {"power_level": 0, "duration": duration})
+  File "/home/pi/.local/lib/python3.5/site-packages/lifxlan/device.py", line 477, in req_with_ack
+    self.req_with_resp(msg_type, Acknowledgement, payload, timeout_secs, max_attempts)
+  File "/home/pi/.local/lib/python3.5/site-packages/lifxlan/device.py", line 526, in req_with_resp
+    raise WorkflowException("WorkflowException: Did not receive {} from {} (Name: {}) in response to {}".format(str(response_type), str(self.mac_addr), str(self.label), str(msg_type)))
+lifxlan.errors.WorkflowException: WorkflowException: Did not receive [<class 'lifxlan.msgtypes.Acknowledgement'>] from d0:73:d5:30:6b:a7 (Name: Main light) in response to <class 'lifxlan.msgtypes.LightSetPower'>

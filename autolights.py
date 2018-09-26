@@ -41,6 +41,7 @@ def main():
 
         if time.time() - last_motion <= (60*15):
             occupied = 1
+	    last_motion = time.time()
             # print("keeping lights on")
         elif occupied != 0:
             occupied = 0
