@@ -31,24 +31,27 @@ def main():
 
     while True:
         i=GPIO.input(pir)
+        try:
+            if i == 1 and occupied == 0:
+                last_motion = time.time()
+                occupied = 1
 
-        if i == 1 and occupied == 0:
-            last_motion = time.time()
-            occupied = 1
+                print("turning on lights", time.strftime('%a %-d %b %y %H:%M:%S'))
+                #print("turning on lights", time.strftime('%-d %a %y %H:%M:%S'))
+                office_light.set_power(65535)
 
-            print("turning on lights", time.strftime('%a %H:%M:%S'))
-            office_light.set_power(65535)
-
-        if time.time() - last_motion <= (60*15):
-            occupied = 1
-            last_motion = time.time()
-            # print("keeping lights on")
-        elif occupied != 0:
-            occupied = 0
-            print("no motion for a while turning lights off", time.strftime('%a %H:%M:%S'))
-            office_light.set_power("off")
-            reading_lamp.set_power("off")
-
+            if i == 1 and time.time() - last_motion <= (60*15):
+                occupied = 1
+                last_motion = time.time()
+                #print("keeping lights on")
+            elif occupied != 0:
+                occupied = 0
+                print("no motion for a while turning lights off", time.strftime('%a %H:%M:%S'))
+                office_light.set_power("off")
+                reading_lamp.set_power("off")
+        
+        except Exception:
+            print("Something went wrong")
 
         time.sleep(1)
 
