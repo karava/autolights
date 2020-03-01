@@ -5,7 +5,7 @@ from lifxlan import LifxLAN, Light
 pir = 23 #input GPIO pin for PIR sensor
 last_motion = 0
 num_lights = 2
-TURNOFF_DELAY = 6
+TURNOFF_DELAY = 60*10
 
 # lights are: 'Main light' and 'Reading lamp'
 
