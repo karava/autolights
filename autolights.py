@@ -5,7 +5,7 @@ from lifxlan import LifxLAN, Light
 pir = 23 #input GPIO pin for PIR sensor
 last_motion = 0
 num_lights = 2
-TURNOFF_DELAY = 60*10
+TURNOFF_DELAY = 6
 
 # lights are: 'Main light' and 'Reading lamp'
 
@@ -50,12 +50,12 @@ def main():
         if i == 1 and occupied == 1:
             occupied = 1
             last_motion = time.time()
-            if office_light.get_power() < 1:
-                try:
+            try:
+                if office_light.get_power() < 1:
                     office_light.set_power(65535)
                     print("recovered lights")
-                except:
-                    print("failed to recovery lights")
+            except:
+                print("failed to recover lights")
         
         if occupied == 1 and time.time() - last_motion >= (TURNOFF_DELAY):
             occupied = 0
