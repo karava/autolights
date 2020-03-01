@@ -1,10 +1,11 @@
 import RPi.GPIO as GPIO
 import time
-from lifxlan import LifxLAN
+from lifxlan import LifxLAN, Light
 
 pir = 23 #input GPIO pin for PIR sensor
 last_motion = 0
 num_lights = 2
+TURNOFF_DELAY = 60*10
 
 # lights are: 'Main light' and 'Reading lamp'
 
@@ -18,8 +19,11 @@ def main():
     occupied = 0
     last_motion = 0
     lifx = LifxLAN(num_lights)
-    office_light = lifx.get_device_by_name('Main light')
-    reading_lamp = lifx.get_device_by_name('Reading lamp')
+    office_light = Light("d0:73:d5:30:6b:a7", "10.0.0.39")
+    #office_light = lifx.get_device_by_name('Main light')
+    print(office_light.get_mac_addr())
+    print(office_light.get_ip_addr())
+    # reading_lamp = lifx.get_device_by_name('Reading lamp')
     
     # blink lights to show script has initialised
     # in the future make all lights blink
@@ -47,12 +51,12 @@ def main():
             occupied = 1
             last_motion = time.time()
         
-        if occupied == 1 and time.time() - last_motion >= (60*10):
+        if occupied == 1 and time.time() - last_motion >= (TURNOFF_DELAY):
             occupied = 0
             print("no motion for a while turning lights off", time.strftime('%a %H:%M:%S'))
             try:
                 office_light.set_power("off")
-                reading_lamp.set_power("off")
+                # reading_lamp.set_power("off")
             except:
                 print("something went wrong with connecting to the lights")
 
