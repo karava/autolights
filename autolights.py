@@ -40,9 +40,10 @@ def main():
         if i == 1 and occupied == 1:
             occupied = 1
             last_motion = time.time()
+            time.sleep(1)
             try:
-		time.sleep(1)
                 if office_light.get_power() < 1:
+                    time.sleep(1)
                     office_light.set_power(65535)
                     print(printTime(),"recovered lights")
             except:
@@ -51,8 +52,8 @@ def main():
         if occupied == 1 and time.time() - last_motion >= (TURNOFF_DELAY):
             occupied = 0
             print(printTime(),"no motion for a while turning lights off")
+            time.sleep(1)
             try:
-		time.sleep(1)
                 office_light.set_power("off")
             except:
                 print(printTime(),"something went wrong with connecting to the lights")
