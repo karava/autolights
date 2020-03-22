@@ -1,6 +1,14 @@
+'''
+# Use below command to scan for a specified number of lights. Reduces scanning time.
+lifx = LifxLAN(num_lights)
+
+# To find a light based on IP and Mac address. Note the router does update the IP address every now and then.
+office_light = Light("d0:73:d5:30:6b:a7", "10.0.0.39")
+'''
 import RPi.GPIO as GPIO
 import time
 from lifxlan import LifxLAN, Light
+
 
 pir = 23 #input GPIO pin for PIR sensor
 last_motion = 0
@@ -15,10 +23,12 @@ def printTime():
     currentTime = "[" + time.strftime('%a %-d %b %y %H:%M:%S') + "]"
     return currentTime
 
-def main():
+
+def init_lights():
     occupied = 0
     last_motion = 0
-    office_light = Light("d0:73:d5:30:6b:a7", "10.0.0.39")
+    lifx = LifxLAN(num_lights)
+    office_light = lifx.get_device_by_name('Main light')
     # blink lights to show script has initialised
     office_light.set_power(0)
     time.sleep(2)
@@ -26,6 +36,11 @@ def main():
     time.sleep(2)
     office_light.set_power(0)
     print(printTime(),"--------autolights initiated--------")
+    return (occupied, last_motion, office_light)
+
+
+def main():
+    occupied, last_motion, office_light = init_lights()
     while True:
         i=GPIO.input(pir)
         if i == 1 and occupied == 0:
