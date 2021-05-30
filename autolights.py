@@ -7,10 +7,12 @@ office_light = Light("d0:73:d5:30:6b:a7", "10.0.0.39")
 '''
 import RPi.GPIO as GPIO
 import time
-import requests
+from lifxlan import LifxLAN, Light
+
 
 pir = 23 #input GPIO pin for PIR sensor
 last_motion = 0
+num_lights = 2
 TURNOFF_DELAY = 60*10
 
 GPIO.setwarnings(False)
@@ -25,18 +27,20 @@ def printTime():
 def init_lights():
     occupied = 0
     last_motion = 0
+    lifx = LifxLAN(num_lights)
+    office_light = lifx.get_device_by_name('Main light')
     # blink lights to show script has initialised
-    toggle_lights("off")
+    office_light.set_power(0)
     time.sleep(2)
-    toggle_lights("on")
+    office_light.set_power(65535)
     time.sleep(2)
-    toggle_lights("off")
+    office_light.set_power(0)
     print(printTime(),"--------autolights initiated--------")
-    return (occupied, last_motion)
+    return (occupied, last_motion, office_light)
 
 
 def main():
-    occupied, last_motion = init_lights()
+    occupied, last_motion, office_light = init_lights()
     while True:
         i=GPIO.input(pir)
         if i == 1 and occupied == 0:
@@ -44,7 +48,7 @@ def main():
             occupied = 1
             print(printTime(),"turning on lights")
             try:
-                toggle_lights("on")
+                office_light.set_power(65535)
             except:
                 print(printTime(),"something went wrong with connecting the lights")
         
@@ -52,23 +56,24 @@ def main():
             occupied = 1
             last_motion = time.time()
             time.sleep(1)
+            try:
+                if office_light.get_power() < 1:
+                    time.sleep(1)
+                    office_light.set_power(65535)
+                    print(printTime(),"recovered lights")
+            except:
+                print(printTime(),"failed to recover lights")
         
         if occupied == 1 and time.time() - last_motion >= (TURNOFF_DELAY):
             occupied = 0
             print(printTime(),"no motion for a while turning lights off")
             time.sleep(1)
             try:
-                toggle_lights("off")
+                office_light.set_power("off")
             except:
                 print(printTime(),"something went wrong with connecting to the lights")
         
         time.sleep(1)
-
-def toggle_lights(power="off"):
-    url = "https://api.lifx.com/v1/lights/all/toggle"
-    headers = {'Authorization': 'Bearer c855bd842b6aef321f4b49ec7c44b7ac86b8c47cf8fb4d6b678160a452402096'} 
-    payload = {"power": power}
-    response = requests.post(url, headers=headers, data=payload)
 
 
 if __name__== "__main__":
