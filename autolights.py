@@ -29,18 +29,22 @@ def init_lights():
     last_motion = 0
     lifx = LifxLAN(num_lights)
     office_light = lifx.get_device_by_name('Main light')
+    reading_lamp = lifx.get_device_by_name('Reading Lamp')
     # blink lights to show script has initialised
     office_light.set_power(0)
+    reading_lamp.set_power(0)
     time.sleep(2)
     office_light.set_power(65535)
+    reading_lamp.set_power(65535)
     time.sleep(2)
     office_light.set_power(0)
+    reading_lamp.set_power(0)
     print(printTime(),"--------autolights initiated--------")
-    return (occupied, last_motion, office_light)
+    return (occupied, last_motion, office_light, reading_lamp)
 
 
 def main():
-    occupied, last_motion, office_light = init_lights()
+    occupied, last_motion, office_light, reading_lamp = init_lights()
     while True:
         i=GPIO.input(pir)
         if i == 1 and occupied == 0:
@@ -70,6 +74,7 @@ def main():
             time.sleep(1)
             try:
                 office_light.set_power("off")
+                reading_lamp.set_power("off")
             except:
                 print(printTime(),"something went wrong with connecting to the lights")
         
